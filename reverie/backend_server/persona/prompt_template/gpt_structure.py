@@ -17,14 +17,14 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 from utils import *
 
 # Configuration
-USE_OLLAMA = False  # Set to False to use OpenAI
+USE_OLLAMA = True  # Set to False to use OpenAI
 OLLAMA_BASE_URL = "http://localhost:11434"
 openai.api_key = openai_api_key
 
 def temp_sleep(seconds=0.1):
   time.sleep(seconds)
 
-def ollama_chat_request(prompt, model="llama3.2:latest"):
+def ollama_chat_request(prompt, model="llama3.2:1b"):
     """
     Make a request to Ollama API with proper streaming response handling
     """
@@ -69,7 +69,7 @@ def ChatGPT_single_request(prompt):
     
     temp_sleep()
     completion = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo", 
+        model="gpt-4o-mini", 
         messages=[{"role": "user", "content": prompt}]
     )
     return completion["choices"][0]["message"]["content"]
@@ -103,7 +103,7 @@ def ChatGPT_request(prompt):
     
     try: 
         completion = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo", 
+            model="gpt-4o-mini", 
             messages=[{"role": "user", "content": prompt}]
         )
         return completion["choices"][0]["message"]["content"]
@@ -124,7 +124,7 @@ def GPT_request(prompt, gpt_parameter):
         messages = [{"role": "user", "content": prompt}]
         
         response = openai.ChatCompletion.create(
-            model=gpt_parameter.get("model", "gpt-3.5-turbo"),  
+            model=gpt_parameter.get("model", "gpt-4o-mini"),  
             messages=messages,
             max_tokens=gpt_parameter.get("max_tokens", 50),
             temperature=gpt_parameter.get("temperature", 0),
@@ -144,7 +144,7 @@ def GPT4_safe_generate_response(prompt,
                                    func_validate=None,
                                    func_clean_up=None,
                                    verbose=False): 
-    prompt = 'GPT-3 Prompt:\n"""\n' + prompt + '\n"""\n'
+    prompt = 'GPT-4o-mini Prompt:\n"""\n' + prompt + '\n"""\n'
     prompt += f"Output the response to the prompt above in json. {special_instruction}\n"
     prompt += "Example output json:\n"
     prompt += '{"output": "' + str(example_output) + '"}'
@@ -307,7 +307,7 @@ def get_embedding(text, model="text-embedding-ada-002"):
 
 
 if __name__ == '__main__':
-    gpt_parameter = {"model": "gpt-3.5-turbo", "max_tokens": 50, 
+    gpt_parameter = {"model": "gpt-4o-mini", "max_tokens": 50, 
                      "temperature": 0, "top_p": 1, "stream": False,
                      "frequency_penalty": 0, "presence_penalty": 0}
     curr_input = ["driving to a friend's house"]

@@ -210,7 +210,7 @@ class Scratch:
                                               scratch_load["act_start_time"],
                                               "%B %d, %Y, %H:%M:%S")
       else: 
-        self.curr_time = None
+        self.act_start_time = None
       self.act_duration = scratch_load["act_duration"]
       self.act_description = scratch_load["act_description"]
       self.act_pronunciatio = scratch_load["act_pronunciatio"]
@@ -248,7 +248,7 @@ class Scratch:
     scratch["att_bandwidth"] = self.att_bandwidth
     scratch["retention"] = self.retention
 
-    scratch["curr_time"] = self.curr_time.strftime("%B %d, %Y, %H:%M:%S")
+    scratch["curr_time"] = self.curr_time.strftime("%B %d, %Y, %H:%M:%S") if self.curr_time else None
     scratch["curr_tile"] = self.curr_tile
     scratch["daily_plan_req"] = self.daily_plan_req
 
@@ -283,8 +283,8 @@ class Scratch:
     scratch["f_daily_schedule_hourly_org"] = self.f_daily_schedule_hourly_org
 
     scratch["act_address"] = self.act_address
-    scratch["act_start_time"] = (self.act_start_time
-                                     .strftime("%B %d, %Y, %H:%M:%S"))
+    scratch["act_start_time"] = (self.act_start_time.strftime("%B %d, %Y, %H:%M:%S") 
+                                if self.act_start_time else None)
     scratch["act_duration"] = self.act_duration
     scratch["act_description"] = self.act_description
     scratch["act_pronunciatio"] = self.act_pronunciatio
@@ -297,12 +297,8 @@ class Scratch:
     scratch["chatting_with"] = self.chatting_with
     scratch["chat"] = self.chat
     scratch["chatting_with_buffer"] = self.chatting_with_buffer
-    if self.chatting_end_time: 
-      scratch["chatting_end_time"] = (self.chatting_end_time
-                                        .strftime("%B %d, %Y, %H:%M:%S"))
-    else: 
-      scratch["chatting_end_time"] = None
-
+    scratch["chatting_end_time"] = (self.chatting_end_time.strftime("%B %d, %Y, %H:%M:%S")
+                                   if self.chatting_end_time else None)
     scratch["act_path_set"] = self.act_path_set
     scratch["planned_path"] = self.planned_path
 
@@ -615,23 +611,3 @@ class Scratch:
       minute = curr_min_sum%60
       ret += f"{hour:02}:{minute:02} || {row[0]}\n"
     return ret
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

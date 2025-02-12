@@ -67,7 +67,7 @@ def run_gpt_prompt_wake_up_hour(persona, test_input=None, verbose=False):
     fs = 8
     return fs
 
-  gpt_param = {"model": "gpt-3.5-turbo", "max_tokens": 5, 
+  gpt_param = {"model": "gpt-4o-mini", "max_tokens": 5, 
              "temperature": 0.8, "top_p": 1, "stream": False,
              "frequency_penalty": 0, "presence_penalty": 0, "stop": ["\n"]}
   prompt_template = "persona/prompt_template/v2/wake_up_hour_v1.txt"
@@ -139,7 +139,7 @@ def run_gpt_prompt_daily_plan(persona,
 
 
   
-  gpt_param = {"model": "gpt-3.5-turbo", "max_tokens": 500, 
+  gpt_param = {"model": "gpt-4o-mini", "max_tokens": 500, 
                "temperature": 0.7, "top_p": 1, "stream": False,
                "frequency_penalty": 0, "presence_penalty": 0, "stop": None}
   prompt_template = "persona/prompt_template/v2/daily_planning_v6.txt"
@@ -232,7 +232,7 @@ def run_gpt_prompt_generate_hourly_schedule(persona,
     fs = "asleep"
     return fs
 
-  gpt_param = {"model": "gpt-3.5-turbo", "max_tokens": 50, 
+  gpt_param = {"model": "gpt-4o-mini", "max_tokens": 50, 
                "temperature": 0.2, "top_p": 1, "stream": False,
                "frequency_penalty": 0, "presence_penalty": 0, "stop": None}
   prompt_template = "persona/prompt_template/v2/generate_hourly_schedule_v2.txt"
@@ -413,7 +413,7 @@ def run_gpt_prompt_task_decomp(persona,
     fs = ["asleep"]
     return fs
 
-  gpt_param = {"model": "gpt-3.5-turbo", "max_tokens": 1000, 
+  gpt_param = {"model": "gpt-4o-mini", "max_tokens": 1000, 
              "temperature": 0, "top_p": 1, "stream": False,
              "frequency_penalty": 0, "presence_penalty": 0, "stop": None}
   prompt_template = "persona/prompt_template/v2/task_decomp_v3.txt"
@@ -589,7 +589,7 @@ def run_gpt_prompt_action_sector(action_description,
 
 
 
-  gpt_param = {"model": "gpt-3.5-turbo", "max_tokens": 15, 
+  gpt_param = {"model": "gpt-4o-mini", "max_tokens": 15, 
                "temperature": 0.4, "top_p": 1, "stream": False,
                "frequency_penalty": 0, "presence_penalty": 0, "stop": None}
   prompt_template = "persona/prompt_template/v1/action_location_sector_v1.txt"
@@ -687,7 +687,7 @@ def run_gpt_prompt_action_arena(action_description,
     fs = ("kitchen")
     return fs
 
-  gpt_param = {"model": "gpt-3.5-turbo", "max_tokens": 15, 
+  gpt_param = {"model": "gpt-4o-mini", "max_tokens": 15, 
                "temperature": 0.4, "top_p": 1, "stream": False,
                "frequency_penalty": 0, "presence_penalty": 0, "stop": None}
   prompt_template = "persona/prompt_template/v1/action_location_object_vMar11.txt"
@@ -743,7 +743,7 @@ def run_gpt_prompt_action_game_object(action_description,
     fs = ("bed")
     return fs
 
-  gpt_param = {"model": "gpt-3.5-turbo", "max_tokens": 15, 
+  gpt_param = {"model": "gpt-4o-mini", "max_tokens": 15, 
                "temperature": 0.4, "top_p": 1, "stream": False,
                "frequency_penalty": 0, "presence_penalty": 0, "stop": None}
   prompt_template = "persona/prompt_template/v1/action_object_v2.txt"
@@ -813,7 +813,7 @@ def run_gpt_prompt_pronunciatio(action_description, persona, verbose=False):
     return True
 
   print ("asdhfapsh8p9hfaiafdsi;ldfj as DEBUG 4") ########
-  gpt_param = {"model": "gpt-3.5-turbo", "max_tokens": 15, 
+  gpt_param = {"model": "gpt-4o-mini", "max_tokens": 15, 
                "temperature": 0.2, "top_p": 1, "stream": False,
                "frequency_penalty": 0, "presence_penalty": 0, "stop": None}
   prompt_template = "persona/prompt_template/v3_ChatGPT/generate_pronunciatio_v1.txt" ########
@@ -921,7 +921,7 @@ def run_gpt_prompt_event_triple(action_description, persona, verbose=False):
 
 
 
-  gpt_param = {"model": "gpt-3.5-turbo", "max_tokens": 30, 
+  gpt_param = {"model": "gpt-4o-mini", "max_tokens": 30, 
                "temperature": 0.4, "top_p": 1, "stream": False,
                "frequency_penalty": 0, "presence_penalty": 0, "stop": ["\n"]}
   prompt_template = "persona/prompt_template/v2/generate_event_triple_v1.txt"
@@ -989,7 +989,7 @@ def run_gpt_prompt_act_obj_desc(act_game_object, act_desp, persona, verbose=Fals
     return True 
 
   print ("asdhfapsh8p9hfaiafdsi;ldfj as DEBUG 6") ########
-  gpt_param = {"model": "gpt-3.5-turbo", "max_tokens": 15, 
+  gpt_param = {"model": "gpt-4o-mini", "max_tokens": 15, 
                "temperature": 0.2, "top_p": 1, "stream": False,
                "frequency_penalty": 0, "presence_penalty": 0, "stop": None}
   prompt_template = "persona/prompt_template/v3_ChatGPT/generate_obj_event_v1.txt" ########
@@ -1054,7 +1054,7 @@ def run_gpt_prompt_act_obj_event_triple(act_game_object, act_obj_desc, persona, 
     fs = (act_game_object, "is", "idle")
     return fs
 
-  gpt_param = {"model": "gpt-3.5-turbo", "max_tokens": 30, 
+  gpt_param = {"model": "gpt-4o-mini", "max_tokens": 30, 
                "temperature": 0.4, "top_p": 1, "stream": False,
                "frequency_penalty": 0, "presence_penalty": 0, "stop": ["\n"]}
   prompt_template = "persona/prompt_template/v2/generate_event_triple_v1.txt"
@@ -1194,7 +1194,7 @@ def run_gpt_prompt_new_decomp_schedule(persona,
 
     return ret
 
-  gpt_param = {"model": "gpt-3.5-turbo", "max_tokens": 1000, 
+  gpt_param = {"model": "gpt-4o-mini", "max_tokens": 1000, 
                "temperature": 0.7, "top_p": 1, "stream": False,
                "frequency_penalty": 0, "presence_penalty": 0, "stop": None}
   prompt_template = "persona/prompt_template/v2/new_decomp_schedule_v1.txt"
@@ -1308,7 +1308,7 @@ def run_gpt_prompt_decide_to_talk(persona, target_persona, retrieved,test_input=
 
 
 
-  gpt_param = {"model": "gpt-3.5-turbo", "max_tokens": 20, 
+  gpt_param = {"model": "gpt-4o-mini", "max_tokens": 20, 
                "temperature": 0.2, "top_p": 1, "stream": False,
                "frequency_penalty": 0, "presence_penalty": 0, "stop": None}
   prompt_template = "persona/prompt_template/v2/decide_to_talk_v2.txt"
@@ -1352,7 +1352,7 @@ def run_gpt_prompt_event_poignancy(persona, event_description, test_input=None, 
   def get_fail_safe(): 
     return 4
 
-  gpt_param = {"model": "gpt-3.5-turbo", "max_tokens": 3, 
+  gpt_param = {"model": "gpt-4o-mini", "max_tokens": 3, 
                "temperature": 0.2, "top_p": 1, "stream": False,
                "frequency_penalty": 0, "presence_penalty": 0, "stop": None}
   prompt_template = "persona/prompt_template/v2/poignancy_event_v1.txt"
@@ -1391,7 +1391,7 @@ def run_gpt_prompt_chat_poignancy(persona, event_description, test_input=None, v
   def get_fail_safe(): 
     return 4
 
-  gpt_param = {"model": "gpt-3.5-turbo", "max_tokens": 3, 
+  gpt_param = {"model": "gpt-4o-mini", "max_tokens": 3, 
                "temperature": 0.2, "top_p": 1, "stream": False,
                "frequency_penalty": 0, "presence_penalty": 0, "stop": None}
   prompt_template = "persona/prompt_template/v2/poignancy_chat_v1.txt"

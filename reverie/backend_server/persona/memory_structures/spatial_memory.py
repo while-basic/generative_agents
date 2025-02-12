@@ -82,30 +82,34 @@ class MemoryTree:
     return x
 
 
-  def get_str_accessible_arena_game_objects(self, arena):
+  def get_str_accessible_arena_game_objects(self, address):
     """
-    Get a str list of all accessible game objects that are in the arena. If 
-    temp_address is specified, we return the objects that are available in
-    that arena, and if not, we return the objects that are in the arena our
-    persona is currently in. 
-
-    INPUT
-      temp_address: optional arena address
-    OUTPUT 
-      str list of all accessible game objects in the gmae arena. 
-    EXAMPLE STR OUTPUT
-      "phone, charger, bed, nightstand"
+    Returns a string of accessible game objects in an arena.
     """
-    curr_world, curr_sector, curr_arena = arena.split(":")
-
-    if not curr_arena: 
+    try:
+      if ":" not in address:
+        return ""
+      curr_world = address.split(":")[0] 
+      curr_sector = address.split(":")[1]
+      curr_arena = address.split(":")[-1].lower()
+      
+      # First try exact match
+      try:
+        x = ", ".join(list(self.tree[curr_world][curr_sector][curr_arena]))
+        return x
+      except KeyError:
+        # If exact match fails, try case-insensitive match
+        for arena in self.tree[curr_world][curr_sector]:
+          if arena.lower() == curr_arena:
+            x = ", ".join(list(self.tree[curr_world][curr_sector][arena]))
+            return x
+        
+        # If arena not found, return empty string
+        return ""
+        
+    except Exception as e:
+      print(f"Error in get_str_accessible_arena_game_objects: {str(e)}")
       return ""
-
-    try: 
-      x = ", ".join(list(self.tree[curr_world][curr_sector][curr_arena]))
-    except: 
-      x = ", ".join(list(self.tree[curr_world][curr_sector][curr_arena.lower()]))
-    return x
 
 
 if __name__ == '__main__':
@@ -114,10 +118,3 @@ if __name__ == '__main__':
   x.print_tree()
 
   print (x.get_str_accessible_sector_arenas("dolores double studio:double studio"))
-
-
-
-
-
-
-

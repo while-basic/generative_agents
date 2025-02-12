@@ -1,6 +1,40 @@
-{% load staticfiles %}
+{% load static %}
 
 <script type="text/javascript">
+	// Initialize datetime and buttons when document is ready
+	document.addEventListener('DOMContentLoaded', function() {
+		let start_datetime = new Date(Date.parse("{{start_datetime}}"));
+		var datetime_options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+		var timeContent = document.getElementById("game-time-content");
+		if (timeContent) {
+			timeContent.innerHTML = start_datetime.toLocaleTimeString("en-US", datetime_options);
+		}
+
+		// Initialize play/pause buttons
+		var play_button = document.getElementById("play_button");
+		var pause_button = document.getElementById("pause_button");
+		
+		if (play_button && pause_button) {
+			pause_button.style.display = 'none'; // Initially hide pause button
+			
+			play_button.onclick = function() {
+				if (window.game && window.game.scene) {
+					window.game.scene.resume();
+					play_button.style.display = 'none';
+					pause_button.style.display = 'inline-block';
+				}
+			};
+			
+			pause_button.onclick = function() {
+				if (window.game && window.game.scene) {
+					window.game.scene.pause();
+					pause_button.style.display = 'none';
+					play_button.style.display = 'inline-block';
+				}
+			};
+		}
+	});
+
 	/*
 	  Main resources: 
 	  https://www.youtube.com/watch?v=cKIG1lKwLeo&t=401s&ab_channel=HongLy
@@ -94,7 +128,6 @@
 
   let start_datetime =new Date(Date.parse("{{start_datetime}}"));
   var datetime_options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
- 	document.getElementById("game-time-content").innerHTML = start_datetime.toLocaleTimeString("en-US", datetime_options);
  	
 
 	// ###########################################################################
@@ -495,40 +528,3 @@
 	var play_button=document.getElementById("play_button");
 	var pause_button=document.getElementById("pause_button");
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

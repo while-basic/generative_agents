@@ -41,6 +41,8 @@ def execute(persona, maze, personas, plan):
     # <target_tiles> is a list of tile coordinates where the persona may go 
     # to execute the current action. The goal is to pick one of them.
     target_tiles = None
+    closest_target_tile = None  
+    path = [persona.scratch.curr_tile]  
 
     print ('aldhfoaf/????')
     print (plan)
@@ -79,7 +81,10 @@ def execute(persona, maze, personas, plan):
     elif "<random>" in plan: 
       # Executing a random location action.
       plan = ":".join(plan.split(":")[:-1])
-      target_tiles = maze.address_tiles[plan]
+      target_tiles = maze.address_tiles.get(plan)
+      if not target_tiles:
+        print(f"Warning: Invalid address {plan}, defaulting to current tile")
+        return persona.scratch.curr_tile, "", f"{persona.name} is waiting as the destination {plan} is unavailable"
       target_tiles = random.sample(list(target_tiles), 1)
 
     else: 
@@ -88,10 +93,10 @@ def execute(persona, maze, personas, plan):
       # Retrieve the target addresses. Again, plan is an action address in its
       # string form. <maze.address_tiles> takes this and returns candidate 
       # coordinates. 
-      if plan not in maze.address_tiles: 
-        maze.address_tiles["Johnson Park:park:park garden"] #ERRORRRRRRR
-      else: 
-        target_tiles = maze.address_tiles[plan]
+      target_tiles = maze.address_tiles.get(plan)
+      if not target_tiles:
+        print(f"Warning: Invalid address {plan}, defaulting to current tile")
+        return persona.scratch.curr_tile, "", f"{persona.name} is waiting as the destination {plan} is unavailable"
 
     # There are sometimes more than one tile returned from this (e.g., a tabe
     # may stretch many coordinates). So, we sample a few here. And from that 
@@ -122,53 +127,71 @@ def execute(persona, maze, personas, plan):
     # one of the target tiles. 
     curr_tile = persona.scratch.curr_tile
     collision_maze = maze.collision_maze
-    closest_target_tile = None
-    path = None
-    for i in target_tiles: 
-      # path_finder takes a collision_mze and the curr_tile coordinate as 
-      # an input, and returns a list of coordinate tuples that becomes the
-      # path. 
-      # e.g., [(0, 1), (1, 1), (1, 2), (1, 3), (1, 4)...]
-      curr_path = path_finder(maze.collision_maze, 
-                              curr_tile, 
-                              i, 
-                              collision_block_id)
-      if not closest_target_tile: 
-        closest_target_tile = i
-        path = curr_path
-      elif len(curr_path) < len(path): 
-        closest_target_tile = i
-        path = curr_path
+    
+    if not target_tiles:
+        # If we have no target tiles, stay at current position
+        closest_target_tile = curr_tile
+    else:
+        min_path_length = float('inf')
+        for i in target_tiles: 
+            try:
+                # Ensure coordinates are in the correct format
+                start = tuple(map(int, curr_tile))
+                end = tuple(map(int, i))
+                
+                # path_finder takes a collision_maze and the curr_tile coordinate as 
+                # an input, and returns a list of coordinate tuples that becomes the
+                # path. 
+                curr_path = path_finder(maze.collision_maze, 
+                                    start, 
+                                    end, 
+                                    collision_block_id)
+                
+                if curr_path and len(curr_path) < min_path_length:
+                    min_path_length = len(curr_path)
+                    closest_target_tile = i
+                    path = curr_path
+            except Exception as e:
+                print(f"Path finding error for tile {i}: {str(e)}")
+                continue
 
+        if not closest_target_tile:
+            # If no valid path was found to any target, stay at current position
+            print(f"No valid path found for {persona.name} to any target tile")
+            closest_target_tile = curr_tile
+            path = [curr_tile]
+
+    # Store the target tile and path for future reference
+    persona.scratch.current_target_tile = closest_target_tile
+    
     # Actually setting the <planned_path> and <act_path_set>. We cut the 
     # first element in the planned_path because it includes the curr_tile. 
-    persona.scratch.planned_path = path[1:]
+    try:
+        persona.scratch.planned_path = path[1:] if len(path) > 1 else []
+    except Exception as e:
+        print(f"Error setting planned path: {str(e)}")
+        persona.scratch.planned_path = []
+    
     persona.scratch.act_path_set = True
   
   # Setting up the next immediate step. We stay at our curr_tile if there is
   # no <planned_path> left, but otherwise, we go to the next tile in the path.
-  ret = persona.scratch.curr_tile
-  if persona.scratch.planned_path: 
-    ret = persona.scratch.planned_path[0]
+  try:
+    if not persona.scratch.planned_path:
+      # We've reached our destination or have nowhere to go
+      pronunciatio = ""
+      description = f"{persona.name} is {persona.scratch.act_description}"
+      return persona.scratch.current_target_tile or persona.scratch.curr_tile, pronunciatio, description
+    
+    # We're still moving to our destination
+    next_tile = tuple(map(int, persona.scratch.planned_path[0]))  # Ensure coordinates are integers
+    pronunciatio = f"{persona.name} is on the way to {persona.scratch.act_description}"
+    description = pronunciatio
+    
     persona.scratch.planned_path = persona.scratch.planned_path[1:]
-
-  description = f"{persona.scratch.act_description}"
-  description += f" @ {persona.scratch.act_address}"
-
-  execution = ret, persona.scratch.act_pronunciatio, description
-  return execution
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return next_tile, pronunciatio, description
+    
+  except Exception as e:
+    print(f"Error in execute: {str(e)}")
+    # If anything goes wrong, stay at current position
+    return persona.scratch.curr_tile, "", f"{persona.name} is waiting due to an error"

@@ -271,26 +271,26 @@ def update_environment(request):
   This sends the backend computation of the persona behavior to the frontend
   visual server. 
   It does this by reading the new movement information from 
-  "storage/movement.json" file.
+  compressed_storage/{sim_code}/master_movement.json file.
 
   ARGS:
     request: Django request
   RETURNS: 
     HttpResponse
   """
-  # f_curr_sim_code = "temp_storage/curr_sim_code.json"
-  # with open(f_curr_sim_code) as json_file:  
-  #   sim_code = json.load(json_file)["sim_code"]
-
   data = json.loads(request.body)
-  step = data["step"]
+  step = str(data["step"])
   sim_code = data["sim_code"]
 
   response_data = {"<step>": -1}
-  if (check_if_file_exists(f"storage/{sim_code}/movement/{step}.json")):
-    with open(f"storage/{sim_code}/movement/{step}.json") as json_file: 
-      response_data = json.load(json_file)
-      response_data["<step>"] = step
+  move_file = f"compressed_storage/{sim_code}/master_movement.json"
+  
+  if check_if_file_exists(move_file):
+    with open(move_file) as json_file: 
+      all_movement = json.load(json_file)
+      if step in all_movement:
+        response_data = all_movement[step]
+        response_data["<step>"] = int(step)
 
   return JsonResponse(response_data)
 
@@ -312,12 +312,3 @@ def path_tester_update(request):
     outfile.write(json.dumps(camera, indent=2))
 
   return HttpResponse("received")
-
-
-
-
-
-
-
-
-
