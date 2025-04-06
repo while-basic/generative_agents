@@ -1,5 +1,3 @@
-
-
 # Generative Agents: Interactive Simulacra of Human Behavior 
 
 <p align="center" width="100%">
@@ -9,15 +7,19 @@
 This repository accompanies our research paper titled "[Generative Agents: Interactive Simulacra of Human Behavior](https://arxiv.org/abs/2304.03442)." It contains our core simulation module for  generative agents—computational agents that simulate believable human behaviors—and their game environment. Below, we document the steps for setting up the simulation environment on your local machine and for replaying the simulation as a demo animation.
 
 ## <img src="https://joonsungpark.s3.amazonaws.com:443/static/assets/characters/profile/Isabella_Rodriguez.png" alt="Generative Isabella">   Setting Up the Environment 
-To set up your environment, you will need to generate a `utils.py` file that contains your OpenAI API key and download the necessary packages.
+To set up your environment, you will need to generate a `utils.py` file that configures Ollama (or optionally OpenAI) and download the necessary packages.
 
 ### Step 1. Generate Utils File
 In the `reverie/backend_server` folder (where `reverie.py` is located), create a new file titled `utils.py` and copy and paste the content below into the file:
 ```
-# Copy and paste your OpenAI API Key
-openai_api_key = "<Your OpenAI API>"
-# Put your name
-key_owner = "<Name>"
+# Ollama configuration
+ollama_base_url = "http://localhost:11434"
+ollama_model = "llama3.2:1b"  # Default model to use
+use_ollama = True  # Set to True to use Ollama, False to use OpenAI
+
+# OpenAI configuration (only needed if use_ollama is False)
+openai_api_key = ""  # Not needed when using Ollama
+key_owner = "user"
 
 maze_assets_loc = "../../environment/frontend_server/static_dirs/assets"
 env_matrix = f"{maze_assets_loc}/the_ville/matrix"
@@ -31,10 +33,19 @@ collision_block_id = "32125"
 # Verbose 
 debug = True
 ```
-Replace `<Your OpenAI API>` with your OpenAI API key, and `<name>` with your name.
+You can customize the Ollama model by changing `ollama_model` to any model you have installed in Ollama. If you prefer to use OpenAI instead, set `use_ollama = False` and add your OpenAI API key.
  
 ### Step 2. Install requirements.txt
 Install everything listed in the `requirements.txt` file (I strongly recommend first setting up a virtualenv as usual). A note on Python version: we tested our environment on Python 3.9.12. 
+
+### Step 3. Install and Run Ollama
+If you haven't already, you'll need to install Ollama from [https://ollama.com/](https://ollama.com/) and run it locally. After installation, make sure to pull the model you want to use:
+
+```
+ollama pull llama3.2:1b
+```
+
+You can replace `llama3.2:1b` with any other model you prefer. Just make sure to update the `ollama_model` in your `utils.py` file to match.
 
 ## <img src="https://joonsungpark.s3.amazonaws.com:443/static/assets/characters/profile/Klaus_Mueller.png" alt="Generative Klaus">   Running a Simulation 
 To run a new simulation, you will need to concurrently start two servers: the environment server and the agent simulation server.
@@ -82,7 +93,10 @@ To start the demo, go to the following address on your browser: `http://localhos
 [http://localhost:8000/demo/July1_the_ville_isabella_maria_klaus-step-3-20/1/3/](http://localhost:8000/demo/July1_the_ville_isabella_maria_klaus-step-3-20/1/3/)
 
 ### Tips
-We've noticed that OpenAI's API can hang when it reaches the hourly rate limit. When this happens, you may need to restart your simulation. For now, we recommend saving your simulation often as you progress to ensure that you lose as little of the simulation as possible when you do need to stop and rerun it. Running these simulations, at least as of early 2023, could be somewhat costly, especially when there are many agents in the environment.
+Using Ollama instead of OpenAI eliminates the API rate limit issues and costs associated with running these simulations. If you encounter any issues with Ollama, make sure that:
+1. The Ollama service is running locally
+2. You've pulled the model specified in your utils.py file
+3. The model you're using is capable of handling the complexity of the prompts
 
 ## <img src="https://joonsungpark.s3.amazonaws.com:443/static/assets/characters/profile/Maria_Lopez.png" alt="Generative Maria">   Simulation Storage Location
 All simulations that you save will be located in `environment/frontend_server/storage`, and all compressed demos will be located in `environment/frontend_server/compressed_storage`. 
@@ -137,5 +151,3 @@ We encourage you to support the following three amazing artists who have designe
 * Character design: [ぴぽ (@pipohi)](https://twitter.com/pipohi)
 
 In addition, we thank Lindsay Popowski, Philip Guo, Michael Terry, and the Center for Advanced Study in the Behavioral Sciences (CASBS) community for their insights, discussions, and support. Lastly, all locations featured in Smallville are inspired by real-world locations that Joon has frequented as an undergraduate and graduate student---he thanks everyone there for feeding and supporting him all these years.
-
-
